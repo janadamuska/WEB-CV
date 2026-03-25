@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jan Adamuška — Datový analytik</title>
+<link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap)" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a18;
+    --paper: #f5f2ec;
+    --accent: #2a6ac8;
+    --muted: #6d7180;
+    --line: #d9d9e2;
+    --card: #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 48px;
+    background: rgba(245,242,236,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.01em;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 72px;
+  }
+  .hero-left {
+    padding: 80px 48px 80px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.2s forwards;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(3rem, 5vw, 5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.35s forwards;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 400px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.5s forwards;
+  }
+  .hero-contacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.65s forwards;
+  }
+  .contact-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.8rem;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 7px 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .contact-pill:hover { border-color: var(--accent); color: var(--accent); }
+  .contact-pill svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .hero-right {
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeIn 0.8s 0.8s forwards;
+  }
+  .hero-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+
+  /* SECTIONS */
+  section { padding: 100px 80px; }
+  section:nth-child(even) { background: var(--card); }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 60px;
+  }
+  .section-num {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.4rem;
+    letter-spacing: -0.02em;
+  }
+
+  /* EXPERIENCE */
+  .exp-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 40px;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .exp-item:first-of-type { border-top: 1px solid var(--line); }
+  .exp-meta { color: var(--muted); font-size: 0.85rem; line-height: 1.8; }
+  .exp-meta strong { color: var(--ink); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .exp-content h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+  }
+  .exp-org { color: var(--accent); font-size: 0.9rem; margin-bottom: 14px; font-weight: 500; }
+  .exp-desc { color: var(--muted); line-height: 1.75; }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+  }
+  .skill-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 28px;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .skill-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .skill-card-icon {
+    width: 36px; height: 36px;
+    background: var(--ink);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+  }
+  .skill-card-icon svg { width: 18px; height: 18px; color: #fff; }
+  .skill-card h4 { font-size: 0.95rem; font-weight: 500; margin-bottom: 12px; }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .skill-tag {
+    font-size: 0.72rem;
+    padding: 3px 10px;
+    background: var(--line);
+    border-radius: 100px;
+    color: var(--muted);
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .project-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 32px;
+    display: flex; flex-direction: column;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .project-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .project-card-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .project-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.5rem;
+    color: var(--line);
+    line-height: 1;
+  }
+  .project-link {
+    width: 32px; height: 32px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted);
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .project-link:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .project-link svg { width: 13px; height: 13px; }
+  .project-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; margin-bottom: 10px; }
+  .project-card p { color: var(--muted); font-size: 0.88rem; line-height: 1.7; flex: 1; }
+  .project-stack { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 20px; }
+  .project-stack span {
+    font-size: 0.7rem; font-weight: 500; letter-spacing: 0.06em;
+    padding: 3px 10px;
+    background: var(--ink); color: #fff;
+    border-radius: 100px;
+  }
+
+  /* EDUCATION */
+  .edu-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 40px;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .edu-item:first-of-type { border-top: 1px solid var(--line); }
+  .edu-meta { color: var(--muted); font-size: 0.85rem; line-height: 1.8; }
+  .edu-content h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem; margin-bottom: 6px;
+  }
+  .edu-inst { color: var(--accent); font-size: 0.9rem; font-weight: 500; margin-bottom: 10px; }
+  .edu-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.4);
+    padding: 48px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+  }
+  footer strong { color: #fff; font-family: 'DM Serif Display', serif; font-size: 1rem; font-weight: 400; }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 40px 24px 60px; }
+    .hero-right { min-height: 320px; }
+    section { padding: 64px 24px; }
+    .exp-item, .edu-item { grid-template-columns: 1fr; gap: 12px; }
+    footer { flex-direction: column; gap: 20px; text-align: center; padding: 40px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Jan Adamuška</div>
+  <ul class="nav-links">
+    <li><a href="#experience">Zkušenosti</a></li>
+    <li><a href="#skills">Dovednosti</a></li>
+    <li><a href="#projects">Projekty</a></li>
+    <li><a href="#education">Vzdělání</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-left">
+    <span class="hero-tag">Hledám práci · Datový analytik</span>
+    <h1>Jan<br><em>Adamuška</em></h1>
+    <p class="hero-sub">Pedagog se zájmem o svět kolem nás a o data. Aktivně rozvíjím dovednosti v datové analýze a hledám příležitosti v této oblasti.</p>
+    <div class="hero-contacts">
+      <a href="mailto:jan.adamuska@seznam.cz" class="contact-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        jan.adamuska@seznam.cz
+      </a>
+      <a href="[linkedin.com](https://www.linkedin.com/in/jan-adamuška-365915363)" target="_blank" class="contact-pill">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+      <a href="[github.com](https://github.com/janadamuska)" target="_blank" class="contact-pill">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        janadamuska
+      </a>
+      <span class="contact-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Zlín, CZ
+      </span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img src="moje-foto.png" alt="Jan Adamuška" class="hero-photo">
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-header reveal">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Zkušenosti</h2>
+  </div>
+  <div class="exp-item reveal">
+    <div class="exp-meta">
+      <strong>Současná pozice</strong><br>
+      2020 — dosud<br>Vizovice
+    </div>
+    <div class="exp-content">
+      <h3>Učitel geografie a tělesné výchovy</h3>
+      <p class="exp-org">Základní škola Vizovice</p>
+      <p class="exp-desc">
+        Aprobovaná výuka geografie a tělesné výchovy.<br>
+        Neaprobovaná výuka fyziky a informatiky.<br>
+        Plánování a realizace výuky dle RVP/ŠVP.<br>
+        Tvorba a ověřování metodických a didaktických materiálů a pomůcek.<br>
+        Implementace digitálních nástrojů do výuky (Scratch, ArcGIS aj.).<br>
+        Vedení výletů a exkurzí.<br>
+        Organizace sportovních turnajů a pohybových aktivit.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-header reveal">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Dovednosti</h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <h4>Python</h4>
+      <div class="skill-tags">
+        <span class="skill-tag">Podmínky a cykly</span>
+        <span class="skill-tag">Funkce</span>
+        <span class="skill-tag">Datové struktury</span>
+        <span class="skill-tag">Základy OOP</span>
+        <span class="skill-tag">Modulární kód</span>
+        <span class="skill-tag">Requests</span>
+        <span class="skill-tag">BeautifulSoup</span>
+        <span class="skill-tag">Web scraping</span>
+        <span class="skill-tag">Čištění dat</span>
+      </div>
+    </div>
+
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+      </div>
+      <h4>SQL / PostgreSQL</h4>
+      <div class="skill-tags">
+        <span class="skill-tag">JOIN</span>
+        <span class="skill-tag">Agregace</span>
+        <span class="skill-tag">Filtrování</span>
+        <span class="skill-tag">CTE</span>
+        <span class="skill-tag">Window Functions</span>
+        <span class="skill-tag">DBeaver</span>
+      </div>
+    </div>
+
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <h4>Power BI</h4>
+      <div class="skill-tags">
+        <span class="skill-tag">Power Query</span>
+        <span class="skill-tag">Transformace dat</span>
+        <span class="skill-tag">Modelování dat</span>
+        <span class="skill-tag">Relace</span>
+        <span class="skill-tag">Základy DAX</span>
+        <span class="skill-tag">Reporty</span>
+      </div>
+    </div>
+
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <h4>Excel</h4>
+      <div class="skill-tags">
+        <span class="skill-tag">Kontingenční tabulky</span>
+        <span class="skill-tag">Pokročilé funkce</span>
+        <span class="skill-tag">Power Pivot</span>
+        <span class="skill-tag">Tvorba měr</span>
+        <span class="skill-tag">Podmíněné formátování</span>
+      </div>
+    </div>
+
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </div>
+      <h4>Další nástroje</h4>
+      <div class="skill-tags">
+        <span class="skill-tag">MS Office</span>
+        <span class="skill-tag">Google Workspace</span>
+        <span class="skill-tag">Canva</span>
+        <span class="skill-tag">ArcGIS</span>
+        <span class="skill-tag">QGIS</span>
+        <span class="skill-tag">Angličtina B1</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header reveal">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Projekty</h2>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card reveal">
+      <div class="project-card-top">
+        <span class="project-num">01</span>
+        <a href="[github.com](https://github.com/janadamuska)" target="_blank" class="project-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+      </div>
+      <h3>Datové projekty na GitHubu</h3>
+      <p>Prohlédněte si mé datové projekty, skripty a analýzy na GitHubu. Průběžně rozrůstající se portfolio s každou novou zvládnutou dovedností.</p>
+      <div class="project-stack">
+        <span>Python</span><span>SQL</span><span>Power BI</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal" style="border-style: dashed; opacity: 0.65;">
+      <div class="project-card-top">
+        <span class="project-num">02</span>
+      </div>
+      <h3>Brzy přibude více</h3>
+      <p>Momentálně buduju portfolio s reálnými datovými projekty. Sledujte aktualizace nebo mě rovnou kontaktujte.</p>
+      <div class="project-stack">
+        <span>Připravuje se</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-header reveal">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Vzdělání</h2>
+  </div>
+
+  <div class="edu-item reveal">
+    <div class="edu-meta">2025<br>Krátkodobý kurz</div>
+    <div class="edu-content">
+      <h3>Kurz Datová analýza s Pythonem</h3>
+      <p class="edu-inst">Engeto Academy</p>
+      <p class="edu-desc">Prakticky zaměřený kurz pokrývající Python, práci s daty, čištění dat, vizualizace a moderní datové workflow.</p>
+    </div>
+  </div>
+
+  <div class="edu-item reveal">
+    <div class="edu-meta">2016 — 2021<br>Vysokoškolské studium</div>
+    <div class="edu-content">
+      <h3>Magistr v oboru Učitelství</h3>
+      <p class="edu-inst">Geografie a tělesná výchova pro SŠ (PřF / FTK UPOL)</p>
+      <p class="edu-desc">Příprava v oboru geografie a tělesné výchovy. Rozvoj analytického myšlení, strukturované komunikace a schopnosti prezentovat informace různorodému publiku.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Jan Adamuška</strong>
+  <span>© 2025 · Otevřen novým příležitostem</span>
+  <div class="footer-links">
+    <a href="mailto:jan.adamuska@seznam.cz">Email</a>
+    <a href="[linkedin.com](https://www.linkedin.com/in/jan-adamuška-365915363)" target="_blank">LinkedIn</a>
+    <a href="[github.com](https://github.com/janadamuska)" target="_blank">GitHub</a>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
