@@ -342,7 +342,7 @@
     <h1>Jan<br><em>Adamuška</em></h1>
     <p class="hero-sub">Pedagog se zájmem o svět kolem nás a o data. Aktivně rozvíjím dovednosti v datové analýze a hledám příležitosti v této oblasti.</p>
     <div class="hero-contacts">
-      <a href="mailto:jan.adamuska@email.cz" class="contact-pill">
+      <a href="mailto:" class="contact-pill">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
         jan.adamuska@email.cz
       </a>
@@ -543,7 +543,7 @@
   <strong>Jan Adamuška</strong>
   <span>© 2025 · Otevřen novým příležitostem</span>
   <div class="footer-links">
-    <a href="mailto:jan.adamuska@email.cz">Email</a>
+    <a href="mailto:">Email</a>
     <a href="https://www.linkedin.com/in/jan-adamuška-365915363" target="_blank">LinkedIn</a>
     <a href="https://github.com/janadamuska" target="_blank">GitHub</a>
   </div>
@@ -552,3 +552,16 @@
 <script>
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
